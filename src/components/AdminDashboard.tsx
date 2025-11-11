@@ -41,6 +41,7 @@ interface User {
   created_at: string;
   is_blocked: boolean;
   avatar_url?: string;
+  phone_number?: string;
 }
 
 interface ReservationData {
@@ -485,6 +486,7 @@ export function AdminDashboard() {
                     <tr className="border-b border-slate-200">
                       <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Name</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Email</th>
+                      <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Phone</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Role</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Status</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">Joined</th>
@@ -518,6 +520,9 @@ export function AdminDashboard() {
                           </div>
                         </td>
                         <td className="py-4 px-4 text-slate-600">{user.email}</td>
+                        <td className="py-4 px-4 text-slate-600">
+                          {user.phone_number || <span className="text-slate-400 italic">Not provided</span>}
+                        </td>
                         <td className="py-4 px-4">
                           <span
                             className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
