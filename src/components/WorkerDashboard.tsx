@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Calendar, Clock, Users, LogOut, CheckCircle, XCircle } from 'lucide-react';
+import { Calendar, Clock, Users, LogOut, CheckCircle, XCircle, UserCircle } from 'lucide-react';
+import { ProfileEditModal } from './ProfileEditModal';
 
 interface Project {
   id: string;
@@ -22,12 +23,13 @@ interface TimeSlotWithDetails {
 }
 
 export function WorkerDashboard() {
-  const { signOut, profile, user } = useAuth();
+  const { signOut, profile, user, refreshProfile } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [timeSlots, setTimeSlots] = useState<TimeSlotWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -147,17 +149,39 @@ export function WorkerDashboard() {
       <nav className="bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-800">Project Reservations</h1>
-              <p className="text-sm text-slate-600">Welcome, {profile?.name}</p>
+            <div className="flex items-center gap-4">
+              <div>
+                <h1 className="text-2xl font-bold text-slate-800">Project Reservations</h1>
+                <p className="text-sm text-slate-600">Welcome, {profile?.name}</p>
+              </div>
             </div>
-            <button
-              onClick={() => signOut()}
-              className="flex items-center gap-2 px-4 py-2 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              <LogOut size={18} />
-              <span>Sign Out</span>
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowProfileModal(true)}
+                className="flex items-center gap-2 px-4 py-2 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt="Profile"
+                    className="w-6 h-6 rounded-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <UserCircle size={18} />
+                )}
+                <span>My Profile</span>
+              </button>
+              <button
+                onClick={() => signOut()}
+                className="flex items-center gap-2 px-4 py-2 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <LogOut size={18} />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -300,6 +324,14 @@ export function WorkerDashboard() {
           </div>
         </div>
       </div>
+
+      <ProfileEditModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        currentPhoneNumber={profile?.phone_number || ''}
+        currentAvatarUrl={profile?.avatar_url || ''}
+        onUpdate={refreshProfile}
+      />
     </div>
   );
 }
