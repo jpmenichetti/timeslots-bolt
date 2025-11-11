@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Plus, Calendar, Clock, Users, LogOut, UserX, Trash2, Ban, CheckCircle } from 'lucide-react';
+import { Plus, Calendar, Clock, Users, LogOut, UserX, Trash2, Ban, CheckCircle, Download } from 'lucide-react';
 import { CreateProjectModal } from './CreateProjectModal';
 import { CreateTimeSlotModal } from './CreateTimeSlotModal';
 import { ConfirmModal } from './ConfirmModal';
@@ -249,6 +249,35 @@ export function AdminDashboard() {
     setBlockingUserId(null);
   };
 
+  const downloadUsersCSV = () => {
+    const headers = ['Name', 'Email', 'Phone', 'Role', 'Status', 'Joined'];
+    const csvRows = [headers.join(',')];
+
+    users.forEach((user) => {
+      const row = [
+        `"${user.name}"`,
+        `"${user.email}"`,
+        `"${user.phone_number || 'Not provided'}"`,
+        user.role,
+        user.is_blocked ? 'Blocked' : 'Active',
+        `"${formatDate(user.created_at)}"`
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', `registered_users_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const openBlockConfirmModal = (userId: string, userName: string, currentBlockStatus: boolean) => {
     setConfirmBlockModal({ userId, userName, currentBlockStatus });
   };
@@ -468,8 +497,19 @@ export function AdminDashboard() {
                 <Users size={20} />
                 Registered Users
               </h2>
-              <div className="text-sm text-slate-600">
-                {users.length} total users
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-slate-600">
+                  {users.length} total users
+                </div>
+                {users.length > 0 && (
+                  <button
+                    onClick={downloadUsersCSV}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <Download size={18} />
+                    Download CSV
+                  </button>
+                )}
               </div>
             </div>
 
