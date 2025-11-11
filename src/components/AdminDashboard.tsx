@@ -40,6 +40,7 @@ interface User {
   role: string;
   created_at: string;
   is_blocked: boolean;
+  avatar_url?: string;
 }
 
 interface ReservationData {
@@ -495,7 +496,22 @@ export function AdminDashboard() {
                       <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                            {user.avatar_url ? (
+                              <img
+                                src={user.avatar_url}
+                                alt={user.name}
+                                className="w-8 h-8 rounded-full object-cover border border-slate-200"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                                  if (fallback) fallback.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <div
+                              className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium"
+                              style={{ display: user.avatar_url ? 'none' : 'flex' }}
+                            >
                               {user.name.charAt(0).toUpperCase()}
                             </div>
                             <span className="font-medium text-slate-800">{user.name}</span>
