@@ -284,18 +284,6 @@ export function WorkerDashboard() {
                 className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
-            <button
-              onClick={() => {
-                setSelectedPreset('next-two-weeks');
-                setStartDateFilter(getDefaultStartDate());
-                setEndDateFilter(getDefaultEndDate());
-                setShowAvailable(true);
-                setShowReserved(true);
-              }}
-              className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              Reset
-            </button>
             <div className="flex items-center gap-4 ml-4 pl-4 border-l border-slate-300">
               <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
                 <input
@@ -316,6 +304,18 @@ export function WorkerDashboard() {
                 Show Reserved
               </label>
             </div>
+            <button
+              onClick={() => {
+                setSelectedPreset('next-two-weeks');
+                setStartDateFilter(getDefaultStartDate());
+                setEndDateFilter(getDefaultEndDate());
+                setShowAvailable(true);
+                setShowReserved(true);
+              }}
+              className="ml-auto px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+            >
+              Reset
+            </button>
           </div>
         </div>
 
