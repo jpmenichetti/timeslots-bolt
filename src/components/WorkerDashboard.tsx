@@ -44,6 +44,7 @@ export function WorkerDashboard() {
 
   const [startDateFilter, setStartDateFilter] = useState<string>(getDefaultStartDate());
   const [endDateFilter, setEndDateFilter] = useState<string>(getDefaultEndDate());
+  const [selectedPreset, setSelectedPreset] = useState<string>('next-two-weeks');
 
   const applyPreset = (preset: string) => {
     const today = new Date();
@@ -71,6 +72,7 @@ export function WorkerDashboard() {
         return;
     }
 
+    setSelectedPreset(preset);
     setStartDateFilter(start.toISOString().split('T')[0]);
     setEndDateFilter(end.toISOString().split('T')[0]);
   };
@@ -290,12 +292,12 @@ export function WorkerDashboard() {
                   <div className="flex items-center gap-2">
                     <label className="text-sm text-slate-600 whitespace-nowrap">Preset:</label>
                     <select
+                      value={selectedPreset}
                       onChange={(e) => {
                         if (e.target.value) {
                           applyPreset(e.target.value);
                         }
                       }}
-                      defaultValue=""
                       className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                     >
                       <option value="">Select range...</option>
@@ -325,6 +327,7 @@ export function WorkerDashboard() {
                   </div>
                   <button
                     onClick={() => {
+                      setSelectedPreset('next-two-weeks');
                       setStartDateFilter(getDefaultStartDate());
                       setEndDateFilter(getDefaultEndDate());
                     }}
