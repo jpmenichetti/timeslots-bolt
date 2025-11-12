@@ -243,6 +243,58 @@ export function WorkerDashboard() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Date Filter Controls */}
+        <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-600 whitespace-nowrap">Preset:</label>
+              <select
+                value={selectedPreset}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    applyPreset(e.target.value);
+                  }
+                }}
+                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+              >
+                <option value="">Select range...</option>
+                <option value="last-month">Last Month</option>
+                <option value="last-two-weeks">Last Two Weeks</option>
+                <option value="next-two-weeks">Next Two Weeks</option>
+                <option value="next-month">Next Month</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-600 whitespace-nowrap">From:</label>
+              <input
+                type="date"
+                value={startDateFilter}
+                onChange={(e) => setStartDateFilter(e.target.value)}
+                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-600 whitespace-nowrap">To:</label>
+              <input
+                type="date"
+                value={endDateFilter}
+                onChange={(e) => setEndDateFilter(e.target.value)}
+                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <button
+              onClick={() => {
+                setSelectedPreset('next-two-weeks');
+                setStartDateFilter(getDefaultStartDate());
+                setEndDateFilter(getDefaultEndDate());
+              }}
+              className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 space-y-4">
             <div className="bg-white rounded-xl shadow-md p-6">
@@ -288,54 +340,6 @@ export function WorkerDashboard() {
                     <span className="text-slate-600 font-normal">- {selectedProjectData.name}</span>
                   )}
                 </h2>
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm text-slate-600 whitespace-nowrap">Preset:</label>
-                    <select
-                      value={selectedPreset}
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          applyPreset(e.target.value);
-                        }
-                      }}
-                      className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                    >
-                      <option value="">Select range...</option>
-                      <option value="last-month">Last Month</option>
-                      <option value="last-two-weeks">Last Two Weeks</option>
-                      <option value="next-two-weeks">Next Two Weeks</option>
-                      <option value="next-month">Next Month</option>
-                    </select>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm text-slate-600 whitespace-nowrap">From:</label>
-                    <input
-                      type="date"
-                      value={startDateFilter}
-                      onChange={(e) => setStartDateFilter(e.target.value)}
-                      className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm text-slate-600 whitespace-nowrap">To:</label>
-                    <input
-                      type="date"
-                      value={endDateFilter}
-                      onChange={(e) => setEndDateFilter(e.target.value)}
-                      className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <button
-                    onClick={() => {
-                      setSelectedPreset('next-two-weeks');
-                      setStartDateFilter(getDefaultStartDate());
-                      setEndDateFilter(getDefaultEndDate());
-                    }}
-                    className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
-                  >
-                    Reset
-                  </button>
-                </div>
               </div>
 
               {!selectedProject ? (
