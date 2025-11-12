@@ -70,8 +70,7 @@ export function WorkerDashboard() {
     }
 
     if (endDateFilter) {
-      const endDate = new Date(endDateFilter);
-      endDate.setHours(23, 59, 59, 999);
+      const endDate = new Date(endDateFilter + 'T23:59:59.999Z');
       query = query.lte('start_time', endDate.toISOString());
     }
 
