@@ -289,6 +289,8 @@ export function WorkerDashboard() {
                 setSelectedPreset('next-two-weeks');
                 setStartDateFilter(getDefaultStartDate());
                 setEndDateFilter(getDefaultEndDate());
+                setShowAvailable(true);
+                setShowReserved(true);
               }}
               className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
             >
