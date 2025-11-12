@@ -30,6 +30,8 @@ export function WorkerDashboard() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [startDateFilter, setStartDateFilter] = useState<string>('');
+  const [endDateFilter, setEndDateFilter] = useState<string>('');
 
   useEffect(() => {
     fetchProjects();
@@ -39,7 +41,7 @@ export function WorkerDashboard() {
     if (selectedProject) {
       fetchTimeSlots(selectedProject);
     }
-  }, [selectedProject, user?.id]);
+  }, [selectedProject, user?.id, startDateFilter, endDateFilter]);
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -58,11 +60,22 @@ export function WorkerDashboard() {
   };
 
   const fetchTimeSlots = async (projectId: string) => {
-    const { data: slots, error } = await supabase
+    let query = supabase
       .from('time_slots')
       .select('*')
-      .eq('project_id', projectId)
-      .order('start_time', { ascending: true });
+      .eq('project_id', projectId);
+
+    if (startDateFilter) {
+      query = query.gte('start_time', new Date(startDateFilter).toISOString());
+    }
+
+    if (endDateFilter) {
+      const endDate = new Date(endDateFilter);
+      endDate.setHours(23, 59, 59, 999);
+      query = query.lte('start_time', endDate.toISOString());
+    }
+
+    const { data: slots, error } = await query.order('start_time', { ascending: true });
 
     if (!error && slots) {
       const slotsWithDetails = await Promise.all(
@@ -224,13 +237,46 @@ export function WorkerDashboard() {
 
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2 mb-6">
-                <Clock size={20} />
-                Available Time Slots
-                {selectedProjectData && (
-                  <span className="text-slate-600 font-normal">- {selectedProjectData.name}</span>
-                )}
-              </h2>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2">
+                  <Clock size={20} />
+                  Available Time Slots
+                  {selectedProjectData && (
+                    <span className="text-slate-600 font-normal">- {selectedProjectData.name}</span>
+                  )}
+                </h2>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-slate-600 whitespace-nowrap">From:</label>
+                    <input
+                      type="date"
+                      value={startDateFilter}
+                      onChange={(e) => setStartDateFilter(e.target.value)}
+                      className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-slate-600 whitespace-nowrap">To:</label>
+                    <input
+                      type="date"
+                      value={endDateFilter}
+                      onChange={(e) => setEndDateFilter(e.target.value)}
+                      className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  {(startDateFilter || endDateFilter) && (
+                    <button
+                      onClick={() => {
+                        setStartDateFilter('');
+                        setEndDateFilter('');
+                      }}
+                      className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
 
               {!selectedProject ? (
                 <div className="text-center py-12 text-slate-500">
