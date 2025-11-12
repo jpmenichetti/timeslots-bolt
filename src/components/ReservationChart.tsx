@@ -47,40 +47,42 @@ export function ReservationChart({ data, projectName }: ReservationChartProps) {
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-end justify-between gap-2 pb-2" style={{ height: '256px' }}>
-            {data.map((item) => {
-              const barHeight = maxCount > 0 ? (item.count / maxCount) * 200 : 0;
+          <div className="overflow-x-auto">
+            <div className="flex items-end justify-between gap-2 pb-2 min-w-full" style={{ height: '256px', minWidth: `${data.length * 40}px` }}>
+              {data.map((item) => {
+                const barHeight = maxCount > 0 ? (item.count / maxCount) * 200 : 0;
 
-              return (
-                <div key={item.date} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="relative w-full flex flex-col justify-end" style={{ height: '200px' }}>
-                    {item.count > 0 && (
-                      <div className="absolute -top-6 left-0 right-0 text-center">
-                        <span className="text-sm font-semibold text-slate-700">
-                          {item.count}
-                        </span>
-                      </div>
-                    )}
-                    <div
-                      className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all hover:from-blue-700 hover:to-blue-500 cursor-pointer"
-                      style={{
-                        height: `${barHeight}px`,
-                        minHeight: item.count > 0 ? '8px' : '0px',
-                      }}
-                      title={`${item.count} reservations on ${formatDate(item.date)}`}
-                    />
+                return (
+                  <div key={item.date} className="flex-1 flex flex-col items-center gap-2" style={{ minWidth: '40px' }}>
+                    <div className="relative w-full flex flex-col justify-end" style={{ height: '200px' }}>
+                      {item.count > 0 && (
+                        <div className="absolute -top-6 left-0 right-0 text-center">
+                          <span className="text-sm font-semibold text-slate-700">
+                            {item.count}
+                          </span>
+                        </div>
+                      )}
+                      <div
+                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all hover:from-blue-700 hover:to-blue-500 cursor-pointer"
+                        style={{
+                          height: `${barHeight}px`,
+                          minHeight: item.count > 0 ? '8px' : '0px',
+                        }}
+                        title={`${item.count} reservations on ${formatDate(item.date)}`}
+                      />
+                    </div>
+                    <div className="flex flex-col items-center gap-0.5 mt-2">
+                      <span className="text-xs font-medium text-slate-700 whitespace-nowrap">
+                        {getDayOfWeek(item.date)}
+                      </span>
+                      <span className="text-xs text-slate-500 whitespace-nowrap">
+                        {formatDate(item.date)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-center gap-0.5 mt-2">
-                    <span className="text-xs font-medium text-slate-700">
-                      {getDayOfWeek(item.date)}
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {formatDate(item.date)}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-slate-200">
@@ -88,7 +90,7 @@ export function ReservationChart({ data, projectName }: ReservationChartProps) {
               Total Reservations: <span className="font-semibold text-slate-800">{data.reduce((sum, d) => sum + d.count, 0)}</span>
             </div>
             <div className="text-sm text-slate-600">
-              Showing next 14 days
+              Showing {data.length} days
             </div>
           </div>
         </div>
