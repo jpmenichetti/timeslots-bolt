@@ -30,8 +30,20 @@ export function WorkerDashboard() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [startDateFilter, setStartDateFilter] = useState<string>('');
-  const [endDateFilter, setEndDateFilter] = useState<string>('');
+
+  const getDefaultStartDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const getDefaultEndDate = () => {
+    const today = new Date();
+    const twoWeeksLater = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000);
+    return twoWeeksLater.toISOString().split('T')[0];
+  };
+
+  const [startDateFilter, setStartDateFilter] = useState<string>(getDefaultStartDate());
+  const [endDateFilter, setEndDateFilter] = useState<string>(getDefaultEndDate());
 
   useEffect(() => {
     fetchProjects();
@@ -263,17 +275,15 @@ export function WorkerDashboard() {
                       className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-                  {(startDateFilter || endDateFilter) && (
-                    <button
-                      onClick={() => {
-                        setStartDateFilter('');
-                        setEndDateFilter('');
-                      }}
-                      className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
-                    >
-                      Clear
-                    </button>
-                  )}
+                  <button
+                    onClick={() => {
+                      setStartDateFilter(getDefaultStartDate());
+                      setEndDateFilter(getDefaultEndDate());
+                    }}
+                    className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
 
