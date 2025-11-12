@@ -67,19 +67,24 @@ export function AdminDashboard() {
     currentBlockStatus: boolean;
   } | null>(null);
   const [reservationData, setReservationData] = useState<ReservationData[]>([]);
-  const [startDateFilter, setStartDateFilter] = useState<string>('');
-  const [endDateFilter, setEndDateFilter] = useState<string>('');
-  const [selectedPreset, setSelectedPreset] = useState<string>('all-time');
-  const [showAvailable, setShowAvailable] = useState<boolean>(true);
-  const [showReserved, setShowReserved] = useState<boolean>(true);
-
   const getDefaultStartDate = () => {
-    return '';
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return now.toISOString().split('T')[0];
   };
 
   const getDefaultEndDate = () => {
-    return '';
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const end = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+    return end.toISOString().split('T')[0];
   };
+
+  const [startDateFilter, setStartDateFilter] = useState<string>(getDefaultStartDate());
+  const [endDateFilter, setEndDateFilter] = useState<string>(getDefaultEndDate());
+  const [selectedPreset, setSelectedPreset] = useState<string>('next-two-weeks');
+  const [showAvailable, setShowAvailable] = useState<boolean>(true);
+  const [showReserved, setShowReserved] = useState<boolean>(true);
 
   const applyPreset = (preset: string) => {
     setSelectedPreset(preset);
@@ -113,11 +118,6 @@ export function AdminDashboard() {
         setEndDateFilter(end.toISOString().split('T')[0]);
         break;
       }
-      case 'all-time':
-      default:
-        setStartDateFilter('');
-        setEndDateFilter('');
-        break;
     }
   };
 
@@ -424,7 +424,7 @@ export function AdminDashboard() {
                     }}
                     className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                   >
-                    <option value="all-time">All Time</option>
+                    <option value="">Select range...</option>
                     <option value="last-month">Last Month</option>
                     <option value="last-two-weeks">Last Two Weeks</option>
                     <option value="next-two-weeks">Next Two Weeks</option>
@@ -471,7 +471,7 @@ export function AdminDashboard() {
                 </div>
                 <button
                   onClick={() => {
-                    setSelectedPreset('all-time');
+                    setSelectedPreset('next-two-weeks');
                     setStartDateFilter(getDefaultStartDate());
                     setEndDateFilter(getDefaultEndDate());
                     setShowAvailable(true);
