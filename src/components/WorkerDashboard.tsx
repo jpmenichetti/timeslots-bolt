@@ -45,6 +45,36 @@ export function WorkerDashboard() {
   const [startDateFilter, setStartDateFilter] = useState<string>(getDefaultStartDate());
   const [endDateFilter, setEndDateFilter] = useState<string>(getDefaultEndDate());
 
+  const applyPreset = (preset: string) => {
+    const today = new Date();
+    let start: Date;
+    let end: Date;
+
+    switch (preset) {
+      case 'last-month':
+        start = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+        end = today;
+        break;
+      case 'last-two-weeks':
+        start = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
+        end = today;
+        break;
+      case 'next-two-weeks':
+        start = today;
+        end = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000);
+        break;
+      case 'next-month':
+        start = today;
+        end = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+        break;
+      default:
+        return;
+    }
+
+    setStartDateFilter(start.toISOString().split('T')[0]);
+    setEndDateFilter(end.toISOString().split('T')[0]);
+  };
+
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -256,7 +286,25 @@ export function WorkerDashboard() {
                     <span className="text-slate-600 font-normal">- {selectedProjectData.name}</span>
                   )}
                 </h2>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-slate-600 whitespace-nowrap">Preset:</label>
+                    <select
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          applyPreset(e.target.value);
+                        }
+                      }}
+                      defaultValue=""
+                      className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                    >
+                      <option value="">Select range...</option>
+                      <option value="last-month">Last Month</option>
+                      <option value="last-two-weeks">Last Two Weeks</option>
+                      <option value="next-two-weeks">Next Two Weeks</option>
+                      <option value="next-month">Next Month</option>
+                    </select>
+                  </div>
                   <div className="flex items-center gap-2">
                     <label className="text-sm text-slate-600 whitespace-nowrap">From:</label>
                     <input
