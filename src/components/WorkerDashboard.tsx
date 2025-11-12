@@ -45,6 +45,8 @@ export function WorkerDashboard() {
   const [startDateFilter, setStartDateFilter] = useState<string>(getDefaultStartDate());
   const [endDateFilter, setEndDateFilter] = useState<string>(getDefaultEndDate());
   const [selectedPreset, setSelectedPreset] = useState<string>('next-two-weeks');
+  const [showAvailable, setShowAvailable] = useState<boolean>(true);
+  const [showReserved, setShowReserved] = useState<boolean>(true);
 
   const applyPreset = (preset: string) => {
     const today = new Date();
@@ -292,6 +294,26 @@ export function WorkerDashboard() {
             >
               Reset
             </button>
+            <div className="flex items-center gap-4 ml-4 pl-4 border-l border-slate-300">
+              <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showAvailable}
+                  onChange={(e) => setShowAvailable(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                />
+                Show Available
+              </label>
+              <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showReserved}
+                  onChange={(e) => setShowReserved(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                />
+                Show Reserved
+              </label>
+            </div>
           </div>
         </div>
 
@@ -355,6 +377,10 @@ export function WorkerDashboard() {
                   {timeSlots.map((slot) => {
                     const isAvailable = slot.reservation_count < slot.total_seats;
                     const isFull = slot.reservation_count >= slot.total_seats;
+
+                    // Filter based on visibility settings
+                    if (slot.user_reserved && !showReserved) return null;
+                    if (!slot.user_reserved && !showAvailable) return null;
 
                     return (
                       <div
