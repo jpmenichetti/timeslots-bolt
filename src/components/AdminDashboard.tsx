@@ -67,6 +67,59 @@ export function AdminDashboard() {
     currentBlockStatus: boolean;
   } | null>(null);
   const [reservationData, setReservationData] = useState<ReservationData[]>([]);
+  const [startDateFilter, setStartDateFilter] = useState<string>('');
+  const [endDateFilter, setEndDateFilter] = useState<string>('');
+  const [selectedPreset, setSelectedPreset] = useState<string>('all-time');
+  const [showAvailable, setShowAvailable] = useState<boolean>(true);
+  const [showReserved, setShowReserved] = useState<boolean>(true);
+
+  const getDefaultStartDate = () => {
+    return '';
+  };
+
+  const getDefaultEndDate = () => {
+    return '';
+  };
+
+  const applyPreset = (preset: string) => {
+    setSelectedPreset(preset);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    switch (preset) {
+      case 'last-month': {
+        const start = new Date(now);
+        start.setMonth(start.getMonth() - 1);
+        setStartDateFilter(start.toISOString().split('T')[0]);
+        setEndDateFilter(now.toISOString().split('T')[0]);
+        break;
+      }
+      case 'last-two-weeks': {
+        const start = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+        setStartDateFilter(start.toISOString().split('T')[0]);
+        setEndDateFilter(now.toISOString().split('T')[0]);
+        break;
+      }
+      case 'next-two-weeks': {
+        const end = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+        setStartDateFilter(now.toISOString().split('T')[0]);
+        setEndDateFilter(end.toISOString().split('T')[0]);
+        break;
+      }
+      case 'next-month': {
+        const end = new Date(now);
+        end.setMonth(end.getMonth() + 1);
+        setStartDateFilter(now.toISOString().split('T')[0]);
+        setEndDateFilter(end.toISOString().split('T')[0]);
+        break;
+      }
+      case 'all-time':
+      default:
+        setStartDateFilter('');
+        setEndDateFilter('');
+        break;
+    }
+  };
 
   useEffect(() => {
     fetchProjects();
@@ -78,7 +131,7 @@ export function AdminDashboard() {
       fetchTimeSlots(selectedProject);
       fetchReservationData(selectedProject);
     }
-  }, [selectedProject]);
+  }, [selectedProject, startDateFilter, endDateFilter]);
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -97,11 +150,22 @@ export function AdminDashboard() {
   };
 
   const fetchTimeSlots = async (projectId: string) => {
-    const { data: slots, error } = await supabase
+    let query = supabase
       .from('time_slots')
       .select('*')
-      .eq('project_id', projectId)
-      .order('start_time', { ascending: true });
+      .eq('project_id', projectId);
+
+    if (startDateFilter) {
+      query = query.gte('start_time', new Date(startDateFilter).toISOString());
+    }
+
+    if (endDateFilter) {
+      const endDate = new Date(endDateFilter);
+      endDate.setHours(23, 59, 59, 999);
+      query = query.lte('start_time', endDate.toISOString());
+    }
+
+    const { data: slots, error } = await query.order('start_time', { ascending: true });
 
     if (!error && slots) {
       const slotsWithDetails = await Promise.all(
@@ -345,7 +409,82 @@ export function AdminDashboard() {
         </div>
 
         {activeTab === 'projects' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <>
+            {/* Date Filter Controls */}
+            <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-slate-600 whitespace-nowrap">Preset:</label>
+                  <select
+                    value={selectedPreset}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        applyPreset(e.target.value);
+                      }
+                    }}
+                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                  >
+                    <option value="all-time">All Time</option>
+                    <option value="last-month">Last Month</option>
+                    <option value="last-two-weeks">Last Two Weeks</option>
+                    <option value="next-two-weeks">Next Two Weeks</option>
+                    <option value="next-month">Next Month</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-slate-600 whitespace-nowrap">From:</label>
+                  <input
+                    type="date"
+                    value={startDateFilter}
+                    onChange={(e) => setStartDateFilter(e.target.value)}
+                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-slate-600 whitespace-nowrap">To:</label>
+                  <input
+                    type="date"
+                    value={endDateFilter}
+                    onChange={(e) => setEndDateFilter(e.target.value)}
+                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="flex items-center gap-4 ml-4 pl-4 border-l border-slate-300">
+                  <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showAvailable}
+                      onChange={(e) => setShowAvailable(e.target.checked)}
+                      className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                    />
+                    Show Available
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showReserved}
+                      onChange={(e) => setShowReserved(e.target.checked)}
+                      className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                    />
+                    Show Reserved
+                  </label>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedPreset('all-time');
+                    setStartDateFilter(getDefaultStartDate());
+                    setEndDateFilter(getDefaultEndDate());
+                    setShowAvailable(true);
+                    setShowReserved(true);
+                  }}
+                  className="ml-auto px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1 space-y-4">
               <div className="bg-white rounded-xl shadow-md p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -430,7 +569,15 @@ export function AdminDashboard() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {timeSlots.map((slot) => (
+                  {timeSlots.map((slot) => {
+                    const hasReservations = slot.reservation_count > 0;
+                    const isAvailable = slot.reservation_count < slot.total_seats;
+
+                    // Filter based on visibility settings
+                    if (hasReservations && !showReserved) return null;
+                    if (!hasReservations && !showAvailable) return null;
+
+                    return (
                     <div
                       key={slot.id}
                       className="p-4 border-2 border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
@@ -484,12 +631,13 @@ export function AdminDashboard() {
                         </div>
                       )}
                     </div>
-                  ))}
+                  );})}
                 </div>
               )}
             </div>
           </div>
         </div>
+          </>
         ) : (
           <div className="bg-white rounded-xl shadow-md p-6">
             <div className="flex items-center justify-between mb-6">
