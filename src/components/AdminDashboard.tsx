@@ -201,21 +201,32 @@ export function AdminDashboard() {
   };
 
   const fetchReservationData = async (projectId: string) => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const twoWeeksFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+    const startDate = new Date(startDateFilter || getDefaultStartDate());
+    startDate.setHours(0, 0, 0, 0);
 
-    const { data: slots } = await supabase
+    const endDate = new Date(endDateFilter || getDefaultEndDate());
+    endDate.setHours(23, 59, 59, 999);
+
+    let query = supabase
       .from('time_slots')
       .select('id, start_time')
-      .eq('project_id', projectId)
-      .gte('start_time', now.toISOString())
-      .lt('start_time', twoWeeksFromNow.toISOString());
+      .eq('project_id', projectId);
+
+    if (startDateFilter) {
+      query = query.gte('start_time', startDate.toISOString());
+    }
+
+    if (endDateFilter) {
+      query = query.lte('start_time', endDate.toISOString());
+    }
+
+    const { data: slots } = await query;
 
     const dateCountMap = new Map<string, number>();
 
-    for (let i = 0; i < 14; i++) {
-      const date = new Date(now.getTime() + i * 24 * 60 * 60 * 1000);
+    const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
+    for (let i = 0; i <= daysDiff; i++) {
+      const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
       const dateStr = date.toISOString().split('T')[0];
       dateCountMap.set(dateStr, 0);
     }
