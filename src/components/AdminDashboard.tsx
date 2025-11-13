@@ -172,7 +172,7 @@ export function AdminDashboard() {
         slots.map(async (slot) => {
           const { data: reservations } = await supabase
             .from('reservations')
-            .select('id, worker_id, profiles(name, email)')
+            .select('id, worker_id, profiles(name, email, avatar_url)')
             .eq('time_slot_id', slot.id);
 
           return {
@@ -630,9 +630,17 @@ export function AdminDashboard() {
                                 key={reservation.id}
                                 className="flex items-center gap-2 text-sm text-slate-600 bg-slate-50 px-3 py-1.5 rounded"
                               >
-                                <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                                  {reservation.profiles.name.charAt(0).toUpperCase()}
-                                </div>
+                                {reservation.profiles.avatar_url ? (
+                                  <img
+                                    src={reservation.profiles.avatar_url}
+                                    alt={reservation.profiles.name}
+                                    className="w-6 h-6 rounded-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                                    {reservation.profiles.name.charAt(0).toUpperCase()}
+                                  </div>
+                                )}
                                 <span className="font-medium">{reservation.profiles.name}</span>
                                 <span className="text-slate-400">•</span>
                                 <span className="text-xs">{reservation.profiles.email}</span>
