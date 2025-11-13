@@ -84,7 +84,7 @@ export function AdminDashboard() {
   const [endDateFilter, setEndDateFilter] = useState<string>(getDefaultEndDate());
   const [selectedPreset, setSelectedPreset] = useState<string>('next-two-weeks');
   const [showAvailable, setShowAvailable] = useState<boolean>(true);
-  const [showReserved, setShowReserved] = useState<boolean>(true);
+  const [showFull, setShowFull] = useState<boolean>(true);
 
   const applyPreset = (preset: string) => {
     setSelectedPreset(preset);
@@ -473,11 +473,11 @@ export function AdminDashboard() {
                   <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={showReserved}
-                      onChange={(e) => setShowReserved(e.target.checked)}
+                      checked={showFull}
+                      onChange={(e) => setShowFull(e.target.checked)}
                       className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
                     />
-                    Show Reserved
+                    Show Full
                   </label>
                 </div>
                 <button
@@ -486,7 +486,7 @@ export function AdminDashboard() {
                     setStartDateFilter(getDefaultStartDate());
                     setEndDateFilter(getDefaultEndDate());
                     setShowAvailable(true);
-                    setShowReserved(true);
+                    setShowFull(true);
                   }}
                   className="ml-auto px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
                 >
@@ -581,12 +581,12 @@ export function AdminDashboard() {
               ) : (
                 <div className="space-y-3">
                   {timeSlots.map((slot) => {
-                    const hasReservations = slot.reservation_count > 0;
+                    const isFull = slot.reservation_count >= slot.total_seats;
                     const isAvailable = slot.reservation_count < slot.total_seats;
 
                     // Filter based on visibility settings
-                    if (hasReservations && !showReserved) return null;
-                    if (!hasReservations && !showAvailable) return null;
+                    if (isFull && !showFull) return null;
+                    if (isAvailable && !showAvailable) return null;
 
                     return (
                     <div
