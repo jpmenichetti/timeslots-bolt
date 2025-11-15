@@ -391,7 +391,7 @@ export function WorkerDashboard() {
                         key={slot.id}
                         className={`p-4 border-2 rounded-lg transition-all ${
                           slot.user_reserved
-                            ? 'border-green-300 bg-green-50'
+                            ? 'border-amber-300 bg-amber-50'
                             : isFull
                             ? 'border-slate-200 bg-slate-50'
                             : 'border-slate-200 hover:border-slate-300 bg-white'
@@ -417,7 +417,7 @@ export function WorkerDashboard() {
                           <div className="flex items-center gap-2">
                             {slot.user_reserved ? (
                               <>
-                                <div className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 flex items-center gap-1">
+                                <div className="px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 flex items-center gap-1">
                                   <CheckCircle size={14} />
                                   Reserved
                                 </div>
