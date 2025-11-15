@@ -256,8 +256,7 @@ export function AdminDashboard() {
     reservations?.forEach((reservation) => {
       const slotStartTime = slotMap.get(reservation.time_slot_id);
       if (slotStartTime) {
-        const slotDate = new Date(slotStartTime);
-        const dateStr = slotDate.toISOString().split('T')[0];
+        const dateStr = slotStartTime.split('T')[0];
         if (dateCountMap.has(dateStr)) {
           dateCountMap.set(dateStr, (dateCountMap.get(dateStr) || 0) + 1);
         }
