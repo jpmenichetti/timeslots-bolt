@@ -61,6 +61,10 @@ export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'projects' | 'users'>('projects');
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const [deletingSlotId, setDeletingSlotId] = useState<string | null>(null);
+  const [confirmDeleteSlotModal, setConfirmDeleteSlotModal] = useState<{
+    slotId: string;
+    slotName: string;
+  } | null>(null);
   const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
   const [confirmBlockModal, setConfirmBlockModal] = useState<{
     userId: string;
@@ -302,17 +306,15 @@ export function AdminDashboard() {
     setDeletingUserId(null);
   };
 
-  const handleDeleteTimeSlot = async (slotId: string) => {
-    if (!confirm('Are you sure you want to delete this time slot? All associated reservations will be removed.')) {
-      return;
-    }
+  const handleDeleteTimeSlot = async () => {
+    if (!confirmDeleteSlotModal) return;
 
-    setDeletingSlotId(slotId);
+    setDeletingSlotId(confirmDeleteSlotModal.slotId);
 
     const { error } = await supabase
       .from('time_slots')
       .delete()
-      .eq('id', slotId);
+      .eq('id', confirmDeleteSlotModal.slotId);
 
     if (error) {
       alert('Failed to delete time slot: ' + error.message);
@@ -322,6 +324,7 @@ export function AdminDashboard() {
     }
 
     setDeletingSlotId(null);
+    setConfirmDeleteSlotModal(null);
   };
 
   const handleToggleBlockUser = async () => {
@@ -644,7 +647,10 @@ export function AdminDashboard() {
                             {slot.reservation_count >= slot.total_seats ? 'Full' : 'Available'}
                           </div>
                           <button
-                            onClick={() => handleDeleteTimeSlot(slot.id)}
+                            onClick={() => setConfirmDeleteSlotModal({
+                              slotId: slot.id,
+                              slotName: `${formatDate(slot.start_time)} ${formatTime(slot.start_time)}-${formatTime(slot.end_time)}`
+                            })}
                             disabled={deletingSlotId === slot.id}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                             title="Delete time slot"
@@ -874,6 +880,17 @@ export function AdminDashboard() {
           onConfirm={handleToggleBlockUser}
           onCancel={() => setConfirmBlockModal(null)}
           isDestructive={!confirmBlockModal.currentBlockStatus}
+        />
+      )}
+
+      {confirmDeleteSlotModal && (
+        <ConfirmModal
+          title="Delete Time Slot"
+          message={`Are you sure you want to delete the time slot for ${confirmDeleteSlotModal.slotName}? All associated reservations will be permanently removed.`}
+          confirmText="Delete"
+          onConfirm={handleDeleteTimeSlot}
+          onCancel={() => setConfirmDeleteSlotModal(null)}
+          isDestructive={true}
         />
       )}
     </div>
