@@ -17,7 +17,8 @@ export function ReservationChart({ data, projectName }: ReservationChartProps) {
   }, [data]);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -25,7 +26,8 @@ export function ReservationChart({ data, projectName }: ReservationChartProps) {
   };
 
   const getDayOfWeek = (dateString: string) => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
     });
