@@ -9,7 +9,7 @@ interface CreateProjectModalProps {
 }
 
 export function CreateProjectModal({ onClose, onSuccess }: CreateProjectModalProps) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [name, setName] = useState('');
   const [startingDate, setStartingDate] = useState('');
   const [error, setError] = useState('');
@@ -25,6 +25,7 @@ export function CreateProjectModal({ onClose, onSuccess }: CreateProjectModalPro
         name,
         starting_date: startingDate,
         created_by: user?.id,
+        creator_email: profile?.email,
       });
 
       if (insertError) throw insertError;
