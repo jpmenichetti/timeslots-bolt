@@ -838,8 +838,8 @@ export function AdminDashboard() {
                           <span
                             className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
                               user.role === 'admin'
-                                ? 'bg-purple-100 text-purple-700'
-                                : 'bg-blue-100 text-orange-700'
+                                ? 'bg-orange-100 text-orange-700'
+                                : 'bg-slate-100 text-slate-700'
                             }`}
                           >
                             {user.role}
