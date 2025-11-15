@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Plus, Calendar, Clock, Users, LogOut, UserX, Trash2, Ban, CheckCircle, Download } from 'lucide-react';
+import { Plus, Calendar, Clock, Users, LogOut, UserX, Trash2, Ban, CheckCircle, Download, UserPlus } from 'lucide-react';
 import { CreateProjectModal } from './CreateProjectModal';
 import { CreateTimeSlotModal } from './CreateTimeSlotModal';
 import { ConfirmModal } from './ConfirmModal';
 import { ReservationChart } from './ReservationChart';
+import { CreateAdminModal } from './CreateAdminModal';
 
 interface Project {
   id: string;
@@ -56,6 +57,7 @@ export function AdminDashboard() {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showTimeSlotModal, setShowTimeSlotModal] = useState(false);
+  const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [activeTab, setActiveTab] = useState<'projects' | 'users'>('projects');
@@ -286,8 +288,12 @@ export function AdminDashboard() {
     }
   };
 
-  const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Are you sure you want to delete this user? All their reservations will be removed.')) {
+  const handleDeleteUser = async (userId: string, userName: string, userRole: string) => {
+    const confirmMessage = userRole === 'admin'
+      ? `Are you sure you want to delete admin user "${userName}"? This action cannot be undone.`
+      : `Are you sure you want to delete worker "${userName}"? All their reservations will be removed.`;
+
+    if (!confirm(confirmMessage)) {
       return;
     }
 
@@ -751,6 +757,13 @@ export function AdminDashboard() {
                 <div className="text-sm text-slate-600">
                   {users.length} total users
                 </div>
+                <button
+                  onClick={() => setShowCreateAdminModal(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <UserPlus size={18} />
+                  Create Admin
+                </button>
                 {users.length > 0 && (
                   <button
                     onClick={downloadUsersCSV}
@@ -868,7 +881,7 @@ export function AdminDashboard() {
                                 )}
                               </button>
                               <button
-                                onClick={() => handleDeleteUser(user.id)}
+                                onClick={() => handleDeleteUser(user.id, user.name, user.role)}
                                 disabled={deletingUserId === user.id}
                                 className="inline-flex items-center gap-2 px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                               >
@@ -946,6 +959,16 @@ export function AdminDashboard() {
           onConfirm={handleDeleteProject}
           onCancel={() => setConfirmDeleteProjectModal(null)}
           isDestructive={true}
+        />
+      )}
+
+      {showCreateAdminModal && (
+        <CreateAdminModal
+          onClose={() => setShowCreateAdminModal(false)}
+          onSuccess={() => {
+            setShowCreateAdminModal(false);
+            fetchUsers();
+          }}
         />
       )}
     </div>
