@@ -341,7 +341,7 @@ export function WorkerDashboard() {
                       onClick={() => setSelectedProject(project.id)}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedProject === project.id
-                          ? 'border-orange-500 bg-blue-50'
+                          ? 'border-orange-500 bg-orange-50'
                           : 'border-slate-200 hover:border-slate-300 bg-white'
                       }`}
                     >
@@ -441,7 +441,7 @@ export function WorkerDashboard() {
                               </div>
                             ) : (
                               <>
-                                <div className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-orange-700">
+                                <div className="px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
                                   Available
                                 </div>
                                 <button
