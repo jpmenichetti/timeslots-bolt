@@ -58,8 +58,8 @@ export function ReservationChart({ data, projectName }: ReservationChartProps) {
                   <div key={item.date} className="flex-1 flex flex-col items-center gap-2" style={{ minWidth: '40px' }}>
                     <div className="relative w-full flex flex-col justify-end" style={{ height: '200px' }}>
                       {item.count > 0 && (
-                        <div className="absolute -top-6 left-0 right-0 text-center">
-                          <span className="text-sm font-semibold text-slate-700">
+                        <div className="absolute -top-7 left-0 right-0 text-center">
+                          <span className="text-base font-bold text-slate-800">
                             {item.count}
                           </span>
                         </div>
