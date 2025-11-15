@@ -63,8 +63,10 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
           throw new Error('Please select at least one weekday');
         }
 
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+        const startParts = startDate.split('-').map(Number);
+        const endParts = endDate.split('-').map(Number);
+        const start = new Date(startParts[0], startParts[1] - 1, startParts[2]);
+        const end = new Date(endParts[0], endParts[1] - 1, endParts[2]);
 
         if (start >= end) {
           throw new Error('End date must be after start date');
@@ -75,7 +77,11 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
 
         while (currentDate <= end) {
           if (weekDays.includes(currentDate.getDay())) {
-            const dateStr = currentDate.toISOString().split('T')[0];
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+
             const startDateTime = new Date(`${dateStr}T${startTime}`).toISOString();
             const endDateTime = new Date(`${dateStr}T${endTime}`).toISOString();
 
