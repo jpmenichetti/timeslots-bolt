@@ -166,7 +166,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 required
               />
             </div>
@@ -182,7 +182,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     required
                   />
                 </div>
@@ -195,7 +195,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     required
                   />
                 </div>
@@ -213,7 +213,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
                       onClick={() => toggleWeekDay(day.value)}
                       className={`flex-1 px-2 py-2 text-xs font-medium rounded-lg transition-colors ${
                         weekDays.includes(day.value)
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-orange-600 text-white'
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                       }`}
                     >
@@ -235,7 +235,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 required
               />
             </div>
@@ -249,7 +249,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 required
               />
             </div>
@@ -265,7 +265,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
               min="1"
               value={totalSeats}
               onChange={(e) => setTotalSeats(e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               required
             />
           </div>
@@ -287,7 +287,7 @@ export function CreateTimeSlotModal({ projectId, onClose, onSuccess }: CreateTim
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating...' : mode === 'batch' ? 'Create Slots' : 'Create Slot'}
             </button>

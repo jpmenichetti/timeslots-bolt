@@ -59,7 +59,7 @@ export function ChangePasswordModal({ onSuccess, isRequired = false }: ChangePas
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Lock className="text-blue-600" size={20} />
+              <Lock className="text-orange-600" size={20} />
             </div>
             <h2 className="text-xl font-semibold text-slate-800">
               {isRequired ? 'Change Your Password' : 'Update Password'}
@@ -99,7 +99,7 @@ export function ChangePasswordModal({ onSuccess, isRequired = false }: ChangePas
                 type={showNewPassword ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-4 py-2 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Enter new password"
                 required
                 minLength={8}
@@ -126,7 +126,7 @@ export function ChangePasswordModal({ onSuccess, isRequired = false }: ChangePas
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Confirm new password"
                 required
                 minLength={8}
@@ -145,7 +145,7 @@ export function ChangePasswordModal({ onSuccess, isRequired = false }: ChangePas
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Changing Password...' : 'Change Password'}
             </button>

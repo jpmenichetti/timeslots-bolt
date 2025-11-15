@@ -470,7 +470,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('projects')}
             className={`px-6 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'projects'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-orange-600 text-white'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
@@ -480,7 +480,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('users')}
             className={`px-6 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'users'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-orange-600 text-white'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
@@ -502,7 +502,7 @@ export function AdminDashboard() {
                         applyPreset(e.target.value);
                       }
                     }}
-                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                   >
                     <option value="">Select range...</option>
                     <option value="last-month">Last Month</option>
@@ -517,7 +517,7 @@ export function AdminDashboard() {
                     type="date"
                     value={startDateFilter}
                     onChange={(e) => setStartDateFilter(e.target.value)}
-                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -526,7 +526,7 @@ export function AdminDashboard() {
                     type="date"
                     value={endDateFilter}
                     onChange={(e) => setEndDateFilter(e.target.value)}
-                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
                 <div className="flex items-center gap-4 ml-4 pl-4 border-l border-slate-300">
@@ -535,7 +535,7 @@ export function AdminDashboard() {
                       type="checkbox"
                       checked={showAvailable}
                       onChange={(e) => setShowAvailable(e.target.checked)}
-                      className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                      className="w-4 h-4 rounded border-slate-300 text-orange-600 focus:ring-2 focus:ring-orange-500"
                     />
                     Show Available
                   </label>
@@ -544,7 +544,7 @@ export function AdminDashboard() {
                       type="checkbox"
                       checked={showFull}
                       onChange={(e) => setShowFull(e.target.checked)}
-                      className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                      className="w-4 h-4 rounded border-slate-300 text-orange-600 focus:ring-2 focus:ring-orange-500"
                     />
                     Show Full
                   </label>
@@ -574,7 +574,7 @@ export function AdminDashboard() {
                   </h2>
                   <button
                     onClick={() => setShowProjectModal(true)}
-                    className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                    className="p-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
                   >
                     <Plus size={18} />
                   </button>
@@ -593,7 +593,7 @@ export function AdminDashboard() {
                       key={project.id}
                       className={`relative p-4 rounded-lg border-2 transition-all group ${
                         selectedProject === project.id
-                          ? 'border-blue-500 bg-blue-50'
+                          ? 'border-orange-500 bg-blue-50'
                           : 'border-slate-200 hover:border-slate-300 bg-white'
                       }`}
                     >
@@ -646,7 +646,7 @@ export function AdminDashboard() {
                 {selectedProject && (
                   <button
                     onClick={() => setShowTimeSlotModal(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
                   >
                     <Plus size={18} />
                     Add Time Slot
@@ -734,7 +734,7 @@ export function AdminDashboard() {
                                     className="w-6 h-6 rounded-full object-cover"
                                   />
                                 ) : (
-                                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                                  <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
                                     {reservation.profiles.name.charAt(0).toUpperCase()}
                                   </div>
                                 )}
@@ -767,7 +767,7 @@ export function AdminDashboard() {
                 </div>
                 <button
                   onClick={() => setShowCreateAdminModal(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
                 >
                   <UserPlus size={18} />
                   Create Admin
@@ -822,7 +822,7 @@ export function AdminDashboard() {
                               />
                             ) : null}
                             <div
-                              className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium"
+                              className="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center text-white text-sm font-medium"
                               style={{ display: user.avatar_url ? 'none' : 'flex' }}
                             >
                               {user.name.charAt(0).toUpperCase()}
@@ -839,7 +839,7 @@ export function AdminDashboard() {
                             className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
                               user.role === 'admin'
                                 ? 'bg-purple-100 text-purple-700'
-                                : 'bg-blue-100 text-blue-700'
+                                : 'bg-blue-100 text-orange-700'
                             }`}
                           >
                             {user.role}

@@ -259,7 +259,7 @@ export function WorkerDashboard() {
                     applyPreset(e.target.value);
                   }
                 }}
-                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
               >
                 <option value="">Select range...</option>
                 <option value="last-month">Last Month</option>
@@ -274,7 +274,7 @@ export function WorkerDashboard() {
                 type="date"
                 value={startDateFilter}
                 onChange={(e) => setStartDateFilter(e.target.value)}
-                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -283,7 +283,7 @@ export function WorkerDashboard() {
                 type="date"
                 value={endDateFilter}
                 onChange={(e) => setEndDateFilter(e.target.value)}
-                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div className="flex items-center gap-4 ml-4 pl-4 border-l border-slate-300">
@@ -292,7 +292,7 @@ export function WorkerDashboard() {
                   type="checkbox"
                   checked={showAvailable}
                   onChange={(e) => setShowAvailable(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                  className="w-4 h-4 rounded border-slate-300 text-orange-600 focus:ring-2 focus:ring-orange-500"
                 />
                 Show Available
               </label>
@@ -301,7 +301,7 @@ export function WorkerDashboard() {
                   type="checkbox"
                   checked={showReserved}
                   onChange={(e) => setShowReserved(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                  className="w-4 h-4 rounded border-slate-300 text-orange-600 focus:ring-2 focus:ring-orange-500"
                 />
                 Show Reserved
               </label>
@@ -341,7 +341,7 @@ export function WorkerDashboard() {
                       onClick={() => setSelectedProject(project.id)}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedProject === project.id
-                          ? 'border-blue-500 bg-blue-50'
+                          ? 'border-orange-500 bg-blue-50'
                           : 'border-slate-200 hover:border-slate-300 bg-white'
                       }`}
                     >
@@ -441,13 +441,13 @@ export function WorkerDashboard() {
                               </div>
                             ) : (
                               <>
-                                <div className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                <div className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-orange-700">
                                   Available
                                 </div>
                                 <button
                                   onClick={() => handleReservation(slot.id)}
                                   disabled={!isAvailable || actionLoading === slot.id}
-                                  className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors disabled:opacity-50"
+                                  className="px-4 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm rounded-lg transition-colors disabled:opacity-50"
                                 >
                                   {actionLoading === slot.id ? 'Reserving...' : 'Reserve'}
                                 </button>

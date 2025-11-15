@@ -78,7 +78,7 @@ export function CreateAdminModal({ onClose, onSuccess }: CreateAdminModalProps) 
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <UserPlus className="text-blue-600" size={20} />
+              <UserPlus className="text-orange-600" size={20} />
             </div>
             <h2 className="text-xl font-semibold text-slate-800">
               {createdAdmin ? 'Admin User Created' : 'Create Admin User'}
@@ -128,7 +128,7 @@ export function CreateAdminModal({ onClose, onSuccess }: CreateAdminModalProps) 
                 </div>
                 <button
                   onClick={copyPassword}
-                  className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+                  className="px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors flex items-center gap-2"
                 >
                   {copiedPassword ? (
                     <>
@@ -165,7 +165,7 @@ export function CreateAdminModal({ onClose, onSuccess }: CreateAdminModalProps) 
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Enter admin name"
                 required
               />
@@ -179,7 +179,7 @@ export function CreateAdminModal({ onClose, onSuccess }: CreateAdminModalProps) 
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Enter admin email"
                 required
               />
@@ -202,7 +202,7 @@ export function CreateAdminModal({ onClose, onSuccess }: CreateAdminModalProps) 
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating...' : 'Create Admin'}
               </button>
