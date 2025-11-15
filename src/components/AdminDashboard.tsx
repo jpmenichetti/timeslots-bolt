@@ -60,6 +60,7 @@ export function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [activeTab, setActiveTab] = useState<'projects' | 'users'>('projects');
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [deletingSlotId, setDeletingSlotId] = useState<string | null>(null);
   const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
   const [confirmBlockModal, setConfirmBlockModal] = useState<{
     userId: string;
@@ -299,6 +300,28 @@ export function AdminDashboard() {
     }
 
     setDeletingUserId(null);
+  };
+
+  const handleDeleteTimeSlot = async (slotId: string) => {
+    if (!confirm('Are you sure you want to delete this time slot? All associated reservations will be removed.')) {
+      return;
+    }
+
+    setDeletingSlotId(slotId);
+
+    const { error } = await supabase
+      .from('time_slots')
+      .delete()
+      .eq('id', slotId);
+
+    if (error) {
+      alert('Failed to delete time slot: ' + error.message);
+    } else if (selectedProject) {
+      fetchTimeSlots(selectedProject);
+      fetchReservationData(selectedProject);
+    }
+
+    setDeletingSlotId(null);
   };
 
   const handleToggleBlockUser = async () => {
@@ -610,14 +633,24 @@ export function AdminDashboard() {
                             {formatDate(slot.start_time)}
                           </div>
                         </div>
-                        <div
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            slot.reservation_count >= slot.total_seats
-                              ? 'bg-red-100 text-red-700'
-                              : 'bg-green-100 text-green-700'
-                          }`}
-                        >
-                          {slot.reservation_count >= slot.total_seats ? 'Full' : 'Available'}
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              slot.reservation_count >= slot.total_seats
+                                ? 'bg-red-100 text-red-700'
+                                : 'bg-green-100 text-green-700'
+                            }`}
+                          >
+                            {slot.reservation_count >= slot.total_seats ? 'Full' : 'Available'}
+                          </div>
+                          <button
+                            onClick={() => handleDeleteTimeSlot(slot.id)}
+                            disabled={deletingSlotId === slot.id}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                            title="Delete time slot"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </div>
                       </div>
 
