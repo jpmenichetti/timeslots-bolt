@@ -61,9 +61,14 @@ export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'projects' | 'users'>('projects');
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const [deletingSlotId, setDeletingSlotId] = useState<string | null>(null);
+  const [deletingProjectId, setDeletingProjectId] = useState<string | null>(null);
   const [confirmDeleteSlotModal, setConfirmDeleteSlotModal] = useState<{
     slotId: string;
     slotName: string;
+  } | null>(null);
+  const [confirmDeleteProjectModal, setConfirmDeleteProjectModal] = useState<{
+    projectId: string;
+    projectName: string;
   } | null>(null);
   const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
   const [confirmBlockModal, setConfirmBlockModal] = useState<{
@@ -349,6 +354,31 @@ export function AdminDashboard() {
     setBlockingUserId(null);
   };
 
+  const handleDeleteProject = async () => {
+    if (!confirmDeleteProjectModal) return;
+
+    setDeletingProjectId(confirmDeleteProjectModal.projectId);
+
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', confirmDeleteProjectModal.projectId);
+
+    if (error) {
+      alert('Failed to delete project: ' + error.message);
+    } else {
+      if (selectedProject === confirmDeleteProjectModal.projectId) {
+        setSelectedProject(null);
+        setTimeSlots([]);
+        setReservationData([]);
+      }
+      fetchProjects();
+    }
+
+    setDeletingProjectId(null);
+    setConfirmDeleteProjectModal(null);
+  };
+
   const downloadUsersCSV = () => {
     const headers = ['Name', 'Email', 'Phone', 'Role', 'Status', 'Joined'];
     const csvRows = [headers.join(',')];
@@ -545,20 +575,35 @@ export function AdminDashboard() {
               ) : (
                 <div className="space-y-2">
                   {projects.map((project) => (
-                    <button
+                    <div
                       key={project.id}
-                      onClick={() => setSelectedProject(project.id)}
-                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                      className={`relative p-4 rounded-lg border-2 transition-all group ${
                         selectedProject === project.id
                           ? 'border-blue-500 bg-blue-50'
                           : 'border-slate-200 hover:border-slate-300 bg-white'
                       }`}
                     >
-                      <div className="font-medium text-slate-800">{project.name}</div>
-                      <div className="text-sm text-slate-600 mt-1">
-                        Starts: {formatDate(project.starting_date)}
-                      </div>
-                    </button>
+                      <button
+                        onClick={() => setSelectedProject(project.id)}
+                        className="w-full text-left"
+                      >
+                        <div className="font-medium text-slate-800">{project.name}</div>
+                        <div className="text-sm text-slate-600 mt-1">
+                          Starts: {formatDate(project.starting_date)}
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => setConfirmDeleteProjectModal({
+                          projectId: project.id,
+                          projectName: project.name
+                        })}
+                        disabled={deletingProjectId === project.id}
+                        className="absolute top-3 right-3 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                        title="Delete project"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}
@@ -889,6 +934,17 @@ export function AdminDashboard() {
           confirmText="Delete"
           onConfirm={handleDeleteTimeSlot}
           onCancel={() => setConfirmDeleteSlotModal(null)}
+          isDestructive={true}
+        />
+      )}
+
+      {confirmDeleteProjectModal && (
+        <ConfirmModal
+          title="Delete Project"
+          message={`Are you sure you want to delete "${confirmDeleteProjectModal.projectName}"? This will permanently remove the project, all its time slots, and all associated reservations. This action cannot be undone.`}
+          confirmText="Delete Project"
+          onConfirm={handleDeleteProject}
+          onCancel={() => setConfirmDeleteProjectModal(null)}
           isDestructive={true}
         />
       )}
