@@ -78,6 +78,11 @@ export function AdminDashboard() {
     projectId: string;
     projectName: string;
   } | null>(null);
+  const [confirmDeleteUserModal, setConfirmDeleteUserModal] = useState<{
+    userId: string;
+    userName: string;
+    userRole: string;
+  } | null>(null);
   const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
   const [confirmBlockModal, setConfirmBlockModal] = useState<{
     userId: string;
@@ -294,21 +299,15 @@ export function AdminDashboard() {
     }
   };
 
-  const handleDeleteUser = async (userId: string, userName: string, userRole: string) => {
-    const confirmMessage = userRole === 'admin'
-      ? `Are you sure you want to delete admin user "${userName}"? This action cannot be undone.`
-      : `Are you sure you want to delete worker "${userName}"? All their reservations will be removed.`;
+  const handleDeleteUser = async () => {
+    if (!confirmDeleteUserModal) return;
 
-    if (!confirm(confirmMessage)) {
-      return;
-    }
-
-    setDeletingUserId(userId);
+    setDeletingUserId(confirmDeleteUserModal.userId);
 
     const { error } = await supabase
       .from('profiles')
       .delete()
-      .eq('id', userId);
+      .eq('id', confirmDeleteUserModal.userId);
 
     if (error) {
       alert('Failed to delete user: ' + error.message);
@@ -320,6 +319,7 @@ export function AdminDashboard() {
     }
 
     setDeletingUserId(null);
+    setConfirmDeleteUserModal(null);
   };
 
   const handleDeleteTimeSlot = async () => {
@@ -901,7 +901,11 @@ export function AdminDashboard() {
                                 )}
                               </button>
                               <button
-                                onClick={() => handleDeleteUser(user.id, user.name, user.role)}
+                                onClick={() => setConfirmDeleteUserModal({
+                                  userId: user.id,
+                                  userName: user.name,
+                                  userRole: user.role
+                                })}
                                 disabled={deletingUserId === user.id}
                                 className="inline-flex items-center gap-2 px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                               >
@@ -1001,6 +1005,21 @@ export function AdminDashboard() {
           onSuccess={() => {
             setResetPasswordModal(null);
           }}
+        />
+      )}
+
+      {confirmDeleteUserModal && (
+        <ConfirmModal
+          title={`Delete ${confirmDeleteUserModal.userRole === 'admin' ? 'Admin' : 'Worker'}`}
+          message={
+            confirmDeleteUserModal.userRole === 'admin'
+              ? `Are you sure you want to delete admin user "${confirmDeleteUserModal.userName}"? This action cannot be undone.`
+              : `Are you sure you want to delete worker "${confirmDeleteUserModal.userName}"? All their reservations will be permanently removed.`
+          }
+          confirmText="Delete"
+          onConfirm={handleDeleteUser}
+          onCancel={() => setConfirmDeleteUserModal(null)}
+          isDestructive={true}
         />
       )}
     </div>
