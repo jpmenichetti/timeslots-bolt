@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Plus, Calendar, Clock, Users, LogOut, UserX, Trash2, Ban, CheckCircle, Download, UserPlus } from 'lucide-react';
+import { Plus, Calendar, Clock, Users, LogOut, UserX, Trash2, Ban, CheckCircle, Download, UserPlus, Key } from 'lucide-react';
 import { CreateProjectModal } from './CreateProjectModal';
 import { CreateTimeSlotModal } from './CreateTimeSlotModal';
 import { ConfirmModal } from './ConfirmModal';
 import { ReservationChart } from './ReservationChart';
 import { CreateAdminModal } from './CreateAdminModal';
+import { ResetPasswordModal } from './ResetPasswordModal';
 
 interface Project {
   id: string;
@@ -58,6 +59,11 @@ export function AdminDashboard() {
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showTimeSlotModal, setShowTimeSlotModal] = useState(false);
   const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
+  const [resetPasswordModal, setResetPasswordModal] = useState<{
+    userId: string;
+    userName: string;
+    userEmail: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [activeTab, setActiveTab] = useState<'projects' | 'users'>('projects');
@@ -854,6 +860,20 @@ export function AdminDashboard() {
                         <td className="py-4 px-4 text-right">
                           {user.id !== profile?.id && (
                             <div className="flex items-center justify-end gap-2">
+                              {user.role === 'worker' && (
+                                <button
+                                  onClick={() => setResetPasswordModal({
+                                    userId: user.id,
+                                    userName: user.name,
+                                    userEmail: user.email
+                                  })}
+                                  className="inline-flex items-center gap-2 px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                  title="Reset password"
+                                >
+                                  <Key size={16} />
+                                  <span className="text-sm">Reset Password</span>
+                                </button>
+                              )}
                               <button
                                 onClick={() => openBlockConfirmModal(user.id, user.name, user.is_blocked)}
                                 disabled={blockingUserId === user.id}
@@ -968,6 +988,18 @@ export function AdminDashboard() {
           onSuccess={() => {
             setShowCreateAdminModal(false);
             fetchUsers();
+          }}
+        />
+      )}
+
+      {resetPasswordModal && (
+        <ResetPasswordModal
+          userId={resetPasswordModal.userId}
+          userName={resetPasswordModal.userName}
+          userEmail={resetPasswordModal.userEmail}
+          onClose={() => setResetPasswordModal(null)}
+          onSuccess={() => {
+            setResetPasswordModal(null);
           }}
         />
       )}

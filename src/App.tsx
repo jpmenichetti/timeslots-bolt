@@ -10,7 +10,7 @@ function App() {
   const [mustChangePassword, setMustChangePassword] = useState(false);
 
   useEffect(() => {
-    if (user && profile?.role === 'admin') {
+    if (user && profile) {
       const checkPasswordChange = user.user_metadata?.must_change_password;
       setMustChangePassword(checkPasswordChange === true);
     } else {
