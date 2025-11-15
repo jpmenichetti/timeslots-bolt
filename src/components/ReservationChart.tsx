@@ -65,7 +65,7 @@ export function ReservationChart({ data, projectName }: ReservationChartProps) {
                         </div>
                       )}
                       <div
-                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all hover:from-blue-700 hover:to-blue-500 cursor-pointer"
+                        className="w-full bg-gradient-to-t from-amber-600 to-amber-400 rounded-t-lg transition-all hover:from-amber-700 hover:to-amber-500 cursor-pointer"
                         style={{
                           height: `${barHeight}px`,
                           minHeight: item.count > 0 ? '8px' : '0px',
