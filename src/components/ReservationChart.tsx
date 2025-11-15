@@ -50,7 +50,7 @@ export function ReservationChart({ data, projectName }: ReservationChartProps) {
       ) : (
         <div className="space-y-4">
           <div className="overflow-x-auto">
-            <div className="flex items-end justify-between gap-2 pb-2 min-w-full" style={{ height: '256px', minWidth: `${data.length * 40}px` }}>
+            <div className="flex items-end justify-between gap-2 pb-2 pt-8 min-w-full" style={{ height: '288px', minWidth: `${data.length * 40}px` }}>
               {data.map((item) => {
                 const barHeight = maxCount > 0 ? (item.count / maxCount) * 200 : 0;
 
