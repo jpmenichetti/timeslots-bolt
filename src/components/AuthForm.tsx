@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { TimeSlotIcon } from './TimeSlotIcon';
 
 export function AuthForm() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -31,7 +32,11 @@ export function AuthForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-slate-800 mb-2">
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <TimeSlotIcon className="w-12 h-12" />
+          <h1 className="text-3xl font-bold text-slate-800">TimeSloter</h1>
+        </div>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2">
           {isSignUp ? 'Create Account' : 'Welcome Back'}
         </h2>
         <p className="text-slate-600 mb-6">

@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Calendar, Clock, Users, LogOut, CheckCircle, XCircle, UserCircle } from 'lucide-react';
 import { ProfileEditModal } from './ProfileEditModal';
+import { AppBanner } from './AppBanner';
 
 interface Project {
   id: string;
@@ -204,6 +205,7 @@ export function WorkerDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <AppBanner />
       <nav className="bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
